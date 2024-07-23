@@ -5,8 +5,8 @@ from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel, EmailStr
 
-# SQLite database URL
-SQLALCHEMY_DATABASE_URL = "sqlite:///./campers.db"
+
+SQLALCHEMY_DATABASE_URL = "postgresql://muriithi:cafeteria@172.17.0.1/myduka"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
