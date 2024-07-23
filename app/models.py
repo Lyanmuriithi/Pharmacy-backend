@@ -5,9 +5,9 @@ from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel, EmailStr
 
-
+# Use PostgreSQL without SQLite-specific args
 SQLALCHEMY_DATABASE_URL = "postgresql://muriithi:cafeteria@172.17.0.1/myduka"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
@@ -21,7 +21,6 @@ class User(Base):
     password = Column(String, nullable=False)
     products = relationship("Product", back_populates="user")
 
-
 class Product(Base):
     __tablename__ = "products"
 
@@ -33,7 +32,7 @@ class Product(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     user = relationship("User", back_populates="products")
-    sales = relationship("Sale", back_populates="product") 
+    sales = relationship("Sale", back_populates="product")
 
 class Sale(Base):
     __tablename__ = 'sales'
@@ -41,10 +40,9 @@ class Sale(Base):
     product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
     stock_quantity = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=func.now(), nullable=False)
-
-    product = relationship("Product", back_populates="sales")
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
 
+    product = relationship("Product", back_populates="sales")
 
 class UserCreate(BaseModel):
     username: str
@@ -55,22 +53,18 @@ class UserLogin(BaseModel):
     email: EmailStr  
     password: str
 
-
 class ProductBase(BaseModel):
     name: str
     cost: float
     price: float
     stock_quantity: int
 
-
 class ProductCreate(ProductBase):
     pass
-
 
 class UserOut(BaseModel):
     username: str
     email: str
-
 
 class ProductOut(BaseModel):
     id: int
@@ -84,12 +78,10 @@ class SalesModel(BaseModel):
     stock_quantity: int
     created_at: Optional[datetime] = None
 
-
 class SalesCreate(SalesModel):
     pass
 
-
-class Sales(SalesModel):
+class SalesOut(SalesModel):
     id: int
     user_id: int
 
