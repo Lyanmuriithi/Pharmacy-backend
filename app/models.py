@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel, EmailStr
 
-SQLALCHEMY_DATABASE_URL = "postgresql://muriithi:cafeteria@172.17.0.1:5432/myduka"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:cafeteria@172.17.0.1:5432/campers"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
